@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live Market & PAC Tracker</title>
+  <title>Trade Republic Portfolio Tracker</title>
   <style>
     :root {
       --bg: #0d0f12;
@@ -12,6 +12,7 @@
       --text: #ffffff;
       --text-muted: #848e9c;
       --green: #00c087;
+      --red: #f6465d;
       --accent: #2563eb;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -45,7 +46,6 @@
     }
     .time-txt { color: var(--text-muted); font-size: 0.75rem; }
 
-    /* Summary Card */
     .summary-card {
       background: linear-gradient(180deg, #181d26 0%, #12151b 100%);
       border: 1px solid var(--border);
@@ -60,7 +60,7 @@
     .val-total { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
     .val-delta { font-size: 1rem; font-weight: 600; }
     .val-delta.pos { color: var(--green); }
-    .val-delta.neg { color: #f6465d; }
+    .val-delta.neg { color: var(--red); }
 
     .sum-subgrid {
       display: grid;
@@ -72,7 +72,6 @@
     .sub-item span:first-child { display: block; font-size: 0.75rem; color: var(--text-muted); }
     .sub-item span:last-child { font-size: 0.95rem; font-weight: 600; }
 
-    /* Controls Panel */
     .controls {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -84,25 +83,24 @@
     }
     .ctrl-row {
       display: grid;
-      grid-template-columns: 1.4fr 1fr 1fr;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
       align-items: center;
-      gap: 8px;
-      font-size: 0.82rem;
+      gap: 6px;
+      font-size: 0.8rem;
     }
-    .ctrl-head { color: var(--text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; }
+    .ctrl-head { color: var(--text-muted); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; }
     .input-num {
       background: #0d0f12;
       border: 1px solid var(--border);
       color: #fff;
-      padding: 6px 8px;
+      padding: 6px 6px;
       border-radius: 6px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       width: 100%;
       text-align: right;
     }
     .input-num:focus { outline: none; border-color: var(--accent); }
 
-    /* Chart Frame */
     .chart-box {
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -115,9 +113,9 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 6px;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       cursor: pointer;
       font-weight: 600;
     }
@@ -132,7 +130,7 @@
     </div>
 
     <div class="summary-card">
-      <div class="sum-header">Stima Portafoglio PAC Live</div>
+      <div class="sum-header">Valore Portafoglio PAC Reale</div>
       <div class="sum-main">
         <div class="val-total" id="totLiveVal">€ 0,00</div>
         <div class="val-delta pos" id="totLiveGain">+€ 0,00 (+0,0%)</div>
@@ -152,31 +150,37 @@
     <div class="controls">
       <div class="ctrl-row ctrl-head">
         <div>Asset Portafoglio</div>
-        <div style="text-align:right;">Quote Possedute</div>
-        <div style="text-align:right;">Prezzo Acquisto Medio (€)</div>
+        <div style="text-align:right;">Quote</div>
+        <div style="text-align:right;">Prezzo Acquisto (€)</div>
+        <div style="text-align:right;">Prezzo Attuale (€)</div>
       </div>
+
       <div class="ctrl-row">
         <div>🌍 MSCI World (70%)</div>
-        <input type="number" id="q_world" class="input-num" value="10" step="0.1">
-        <input type="number" id="p_world" class="input-num" value="98.50" step="0.5">
+        <input type="number" id="q_world" class="input-num" value="0" step="0.000001">
+        <input type="number" id="p_world" class="input-num" value="104.50" step="0.01">
+        <input type="number" id="cur_world" class="input-num" value="104.50" step="0.01">
       </div>
+
       <div class="ctrl-row">
-        <div>💻 S&P 500 Info Tech (20%)</div>
-        <input type="number" id="q_tech" class="input-num" value="5" step="0.1">
-        <input type="number" id="p_tech" class="input-num" value="44.20" step="0.5">
+        <div>💻 S&P Tech (20%)</div>
+        <input type="number" id="q_tech" class="input-num" value="0" step="0.000001">
+        <input type="number" id="p_tech" class="input-num" value="49.20" step="0.01">
+        <input type="number" id="cur_tech" class="input-num" value="49.20" step="0.01">
       </div>
+
       <div class="ctrl-row">
         <div>🛡️ Future Defence (10%)</div>
-        <input type="number" id="q_def" class="input-num" value="8" step="0.1">
-        <input type="number" id="p_def" class="input-num" value="28.10" step="0.5">
+        <input type="number" id="q_def" class="input-num" value="1.608406" step="0.000001">
+        <input type="number" id="p_def" class="input-num" value="18.65" step="0.01">
+        <input type="number" id="cur_def" class="input-num" value="18.65" step="0.01">
       </div>
     </div>
 
     <div>
       <div class="tabs">
-        <button class="tab-btn active" onclick="switchChart('EURONEXT:SWDA', this)">🌍 MSCI World</button>
-        <button class="tab-btn" onclick="switchChart('XETR:QDVE', this)">💻 Tech (QDVE)</button>
-        
+        <button class="tab-btn active" onclick="switchChart('EURONEXT:SWDA', this)">🌍 MSCI World (SWDA)</button>
+        <button class="tab-btn" onclick="switchChart('XETR:QDVE', this)">💻 S&P Info Tech (QDVE)</button>
       </div>
       <div class="chart-box" id="tvContainer"></div>
     </div>
@@ -217,32 +221,37 @@
       renderWidget(symbol);
     }
 
-    // Inizializza con MSCI World
     renderWidget('EURONEXT:SWDA');
 
-    // Calcolo realistico dei valori
     const elQWorld = document.getElementById('q_world');
     const elPWorld = document.getElementById('p_world');
+    const elCurWorld = document.getElementById('cur_world');
+
     const elQTech = document.getElementById('q_tech');
     const elPTech = document.getElementById('p_tech');
+    const elCurTech = document.getElementById('cur_tech');
+
     const elQDef = document.getElementById('q_def');
     const elPDef = document.getElementById('p_def');
+    const elCurDef = document.getElementById('cur_def');
 
     const fmt = (v) => new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(v);
-
-    // Stime indicative di mercato collegate ai benchmark reali
-    const livePrices = { world: 104.80, tech: 49.30, def: 31.60 };
 
     function calculatePortfolio() {
       const qw = parseFloat(elQWorld.value) || 0;
       const pw = parseFloat(elPWorld.value) || 0;
+      const curw = parseFloat(elCurWorld.value) || 0;
+
       const qt = parseFloat(elQTech.value) || 0;
       const pt = parseFloat(elPTech.value) || 0;
+      const curt = parseFloat(elCurTech.value) || 0;
+
       const qd = parseFloat(elQDef.value) || 0;
       const pd = parseFloat(elPDef.value) || 0;
+      const curd = parseFloat(elCurDef.value) || 0;
 
       const costBasis = (qw * pw) + (qt * pt) + (qd * pd);
-      const currentVal = (qw * livePrices.world) + (qt * livePrices.tech) + (qd * livePrices.def);
+      const currentVal = (qw * curw) + (qt * curt) + (qd * curd);
       const gain = currentVal - costBasis;
       const gainPct = costBasis > 0 ? (gain / costBasis) * 100 : 0;
 
@@ -256,9 +265,8 @@
       gainEl.className = 'val-delta ' + (gain >= 0 ? 'pos' : 'neg');
     }
 
-    [elQWorld, elPWorld, elQTech, elPTech, elQDef, elPDef].forEach(inp => {
-      inp.addEventListener('input', calculatePortfolio);
-    });
+    const allInputs = [elQWorld, elPWorld, elCurWorld, elQTech, elPTech, elCurTech, elQDef, elPDef, elCurDef];
+    allInputs.forEach(inp => inp.addEventListener('input', calculatePortfolio));
     calculatePortfolio();
   </script>
 </body>
